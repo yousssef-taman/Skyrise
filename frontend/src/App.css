@@ -1,0 +1,47 @@
+/* CSS Reset */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Optional: Prevent horizontal scrolling */
+}
+.App {
+  font-family: "Inter", sans-serif;
+  height: 100vh;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Optional: Remove default list styles for unordered and ordered lists */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Optional: Remove default link styling */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Optional: Remove default table borders */
+table {
+  border-collapse: collapse;
+}
+
+:root {
+  --navy-blue: #05203c;
+  --greyish-white: #e0e4e9;
+  --blue: #0062e3;
+}
