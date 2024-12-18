@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class AccountController {
 
     private final AccountServices accountServices;
@@ -50,6 +51,25 @@ public class AccountController {
         if (flag)
             return new ResponseEntity<>(true, HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
+
+    @PostMapping("validate")
+    public ResponseEntity<String> validateUser(@RequestParam Integer accountId, @RequestParam String password) {
+        boolean isValid = accountServices.checkPassword(accountId, password);
+        System.out.println(isValid);
+        if (isValid)
+            return ResponseEntity.ok("Valid password");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<String> deleteAccount(@RequestParam Integer accountId) {
+        try {
+            accountServices.deleteAccount(accountId);
+            return ResponseEntity.ok().body("Account has been deleted.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }
