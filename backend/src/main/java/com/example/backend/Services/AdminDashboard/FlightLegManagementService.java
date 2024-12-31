@@ -25,12 +25,11 @@ public class FlightLegManagementService {
 
         if (flightRepository.existsById(flightId)) {
             Flight flight = flightRepository.findFlightByFlightId(flightId).get();
-            List<FlightLeg> flightLegsList = flight.getFlightLegs();
 
             boolean isChanged = false;
             for (int i = 0; i < flightLegs.size(); i++) {
                 FlightLegUpdateDTO flightLegDTO = flightLegs.get(i);
-                FlightLeg flightLeg = flightLegsList.get(i);
+                FlightLeg flightLeg = flightLegRepository.findById(flightId, flightLegDTO.flightLegId());
 
                 if (flightLeg.getDepartureTime().equals(flightLegDTO.departureTime()) &&
                         flightLeg.getArrivalTime().equals(flightLegDTO.arrivalTime()) &&
