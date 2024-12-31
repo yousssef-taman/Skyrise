@@ -10,6 +10,4 @@ import com.example.backend.Entities.CompositeKeys.FlightLegPK;
 @Repository
 public interface FlightLegRepository extends JpaRepository<FlightLeg, FlightLegPK> {
     List<FlightLeg> findByFlightId(Integer flightId);
-
-    FlightLeg findById(Integer flightId, Integer flightLegId);
 }
