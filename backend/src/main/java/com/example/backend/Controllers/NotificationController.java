@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,13 +17,13 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class NotificationController {
 
     private final NotificationService notificationService;
     
-    @GetMapping("/get")
-    public ResponseEntity<PageResponse<NotificationDTO>> getNotifications(@RequestParam Integer userId, @RequestParam int pageNum) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<PageResponse<NotificationDTO>> getNotifications(@PathVariable Integer userId, @RequestParam int pageNum) {
         PageResponse<NotificationDTO> notifications = notificationService.getNotification(userId, pageNum);
         return ResponseEntity.ok(notifications);
     }
