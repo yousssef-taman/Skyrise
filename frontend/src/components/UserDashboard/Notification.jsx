@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box"; // Add this import
 import Button from "@mui/material/Button"; // Add this import
 import useUserAuthenticationStore from "../../store/useUserAuthenticationStore";
-import { getNotification } from "../../api/flightsAfterSearch";
+import { getNotification, updateNotification } from "../../api/flightsAfterSearch";
 
 const Notification = ({ number, init, onClick }) => {
   const { id, role } = useUserAuthenticationStore();
@@ -21,18 +21,26 @@ const Notification = ({ number, init, onClick }) => {
   useEffect(() => {
     setNotifications(init);
   }, [init]);
+ 
 
   console.log(init);
   const handleOpenNoMenu = (event) => {
     setAnchorElNo(event.currentTarget);
   };
 
+  const handleUpdateStatus = () => async (id, numOfNotification, notificationId) => {
+    try {
+      const data = await updateNotification(id, numOfNotification, notificationId);
+    } catch (error) {
+      console.error("Failed to update notifications:", error);
+    }
+  };
   const handleCloseNoMenu = () => {
-    // update status
+    handleUpdateStatus(id, number,notifications[0].notificationId)
     setAnchorElNo(null);
   };
   const handleLoadMore = async () => {
-    const newData = await  onClick(id, pageNum + 1);
+    const newData = await onClick(id, pageNum + 1);
     setPageNum((prev) => prev + 1);
     setNotifications((prev) => [...prev, ...newData]);
   };
