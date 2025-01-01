@@ -12,7 +12,7 @@ const WebSocketTest = () => {
             () => {
                 console.log('Connected to WebSocket');
 
-                stompClient.subscribe('/topic/user-1', (message) => {
+                stompClient.subscribe('/topic/user-2', (message) => {
                     console.log('Received message:', JSON.parse(message.body));
                 });
             },
