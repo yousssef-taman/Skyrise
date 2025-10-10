@@ -28,12 +28,8 @@ public class UserServices {
     }
 
     public Integer addUser(User user) {
-        try {
-            this.userRepository.save(user);
-            return user.getAccount().getAccountId();
-        } catch (Exception e) {
-            return null;
-        }
+        User savedUser = this.userRepository.save(user);
+        return savedUser.getUserId();
     }
 
     public void deleteUserByAccountId(Integer accountId) {

@@ -2,76 +2,53 @@ package com.example.backend.Services;
 
 import com.example.backend.Entities.Account;
 import com.example.backend.Enums.Role;
+import com.example.backend.Exceptions.InvalidPasswordException;
+import com.example.backend.Exceptions.UserNotFoundException;
 import com.example.backend.Repositories.AccountRepository;
-
-import jakarta.persistence.EntityNotFoundException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.example.backend.constants.ExceptionMessages;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AccountServices {
 
     private final AccountRepository accountRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    private UserServices userServices;
+    private final PasswordEncoder passwordEncoder;
+    private final UserServices userServices;
 
-    public AccountServices(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-        bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    public void resetPassword(Integer id, String password) {
+        Account userAccount = this.accountRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(ExceptionMessages.ACCOUNT_NOT_FOUND));
+        if (!isPasswordValid(password)) {
+            throw new InvalidPasswordException(ExceptionMessages.INVALID_PASSWORD);
+        }
+        userAccount.setPassword(passwordEncoder.encode(password));
+        this.accountRepository.save(userAccount);
     }
 
-    public boolean resetPassword(Integer id, String password) {
-        Optional<Account> optionalAccount = this.accountRepository.findAccountByAccountId(id);
-        if (optionalAccount.isEmpty()) {
-            return false;
+    public void changePassword(String email, String newPassword) {
+
+        Account userAccount = this.accountRepository.findAccountByEmail(email)
+            .orElseThrow(() -> new UserNotFoundException(ExceptionMessages.ACCOUNT_NOT_FOUND));
+        if (!isPasswordValid(newPassword)) {
+            throw new InvalidPasswordException(ExceptionMessages.INVALID_PASSWORD);
         }
-        Account account = optionalAccount.get();
-        String encodedPassword = bCryptPasswordEncoder.encode(password);
-        System.out.println(account.getEmail());
-        System.out.println(encodedPassword);
-        account.setPassword(encodedPassword);
-        try {
-            this.accountRepository.save(account);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        userAccount.setPassword(this.passwordEncoder.encode(newPassword));
+        accountRepository.save(userAccount);
     }
 
-    public boolean changePassword(String email, String newPassword) {
-
-        Optional<Account> optionalAccount = this.accountRepository.findAccountByEmail(email);
-        if (optionalAccount.isEmpty()) {
-            throw new IllegalArgumentException("User with the provided email does not exist.");
-        }
-        Account account = optionalAccount.get();
-
-        if (!validateNewPassword(newPassword)) {
-            throw new IllegalArgumentException("New password does not meet the security requirements.");
-        }
-
-        account.setPassword(this.bCryptPasswordEncoder.encode(newPassword));
-        try {
-            this.accountRepository.save(account);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean validateNewPassword(String password) {
-        return password.length() >= 8 &&
+    private boolean isPasswordValid(String password) {
+        return  password.length() >= 8 &&
                 password.matches(".*[A-Z].*") &&
                 password.matches(".*\\d.*") &&
                 password.matches(".*[@#$%^&+=!].*");
     }
 
-    public Account createAccount(String email, String password, Role role) {
+    public Account createUserAccount(String email, String password, Role role) {
         Account account = new Account();
         account.setEmail(email);
         account.setPassword(password);
@@ -99,33 +76,23 @@ public class AccountServices {
     }
 
     public boolean deleteAccount(Integer accountId) {
-        Optional<Account> optionalAccount = this.accountRepository.findAccountByAccountId(accountId);
-        if (optionalAccount.isEmpty()) {
-            throw new IllegalArgumentException("User with the provided email does not exist.");
-        }
-        Account account = optionalAccount.get();
-        if (account.getRole() == Role.USER) {
+        Account userAccount = this.accountRepository.findAccountByAccountId(accountId).orElseThrow(() -> new UserNotFoundException(ExceptionMessages.ACCOUNT_NOT_FOUND));
+        if (userAccount.getRole() == Role.USER) {
             this.userServices.deleteUserByAccountId(accountId);
             this.accountRepository.deleteAccountById(accountId);
         } else if (this.accountRepository.numberOfAdmins(Role.ADMIN) > 1) {
             this.userServices.deleteUserByAccountId(accountId);
             this.accountRepository.deleteAccountById(accountId);
         } else {
-            throw new IllegalArgumentException("There is only one Admin");
+            throw new IllegalArgumentException(ExceptionMessages.ONLY_ONE_ADMIN);
         }
         return true;
     }
 
     public boolean checkPassword(Integer accountId, String password) {
-        Optional<Account> accountOptional = this.accountRepository.findAccountByAccountId(accountId);
-        if (accountOptional.isPresent()) {
-            Account account = accountOptional.get();
-            return bCryptPasswordEncoder.matches(password, account.getPassword());
-        } else {
-            System.out.println(password);
-            new EntityNotFoundException("User doesn't have an account");
-        }
-        return false;
+        Account userAccount = this.accountRepository.findById(accountId)
+            .orElseThrow(() -> new UserNotFoundException(ExceptionMessages.ACCOUNT_NOT_FOUND));
+        return passwordEncoder.matches(password, userAccount.getPassword());
     }
 
 }

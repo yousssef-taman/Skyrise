@@ -46,18 +46,15 @@ public class AccountController {
     }
 
     @PostMapping("resetPassword/{id}")
-    public ResponseEntity<Boolean> resetPassword(@PathVariable Integer id, @RequestParam String password) {
-        boolean flag = this.accountServices.resetPassword(id, password);
-        if (flag)
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    public ResponseEntity<Void> resetPassword(@PathVariable Integer id, @RequestParam String password) {
+        this.accountServices.resetPassword(id, password);
+        return ResponseEntity.ok().build() ;
     }
 
     @PostMapping("validate")
-    public ResponseEntity<String> validateUser(@RequestParam Integer accountId, @RequestParam String password) {
-        boolean isValid = accountServices.checkPassword(accountId, password);
-        System.out.println(isValid);
-        if (isValid)
+    public ResponseEntity<String> authenticateAccountByPassword(@RequestParam Integer accountId, @RequestParam String password) {
+        boolean isPasswordValid = accountServices.checkPassword(accountId, password);
+        if (isPasswordValid)
             return ResponseEntity.ok("Valid password");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
     }

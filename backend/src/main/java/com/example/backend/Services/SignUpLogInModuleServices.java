@@ -2,9 +2,11 @@ package com.example.backend.Services;
 
 import java.util.Objects;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.DTOs.Admin;
@@ -16,21 +18,17 @@ import com.example.backend.Enums.Role;
 
 
 @Service
+@RequiredArgsConstructor
 public class SignUpLogInModuleServices{
 
     private final UserServices userServices;
     private final AccountServices accountServices;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public SignUpLogInModuleServices(UserServices userServices, AccountServices accountServices) {
-        this.userServices = userServices;
-        this.accountServices = accountServices;
-        bCryptPasswordEncoder = new BCryptPasswordEncoder();
-    }
 
     public Integer addCustomer(Customer customer) {
-        String encodedPassword = bCryptPasswordEncoder.encode(customer.getPassword());
-        Account account = this.accountServices.createAccount(customer.getEmail(), encodedPassword, Role.USER);
+        String encodedPassword = passwordEncoder.encode(customer.getPassword());
+        Account account = this.accountServices.createUserAccount(customer.getEmail(), encodedPassword, Role.USER);
         User user = this.userServices.createUser(account, customer.getCountryCode(), customer.getPhoneNumber(),
                 customer.getNationalId(), customer.getDateOfBirth(), customer.getFirstName(), customer.getLastName(),
                 customer.getGender(), customer.getPassportNumber(), customer.getPassportIssuingCountry());
@@ -38,7 +36,7 @@ public class SignUpLogInModuleServices{
     }
 
     public Integer addAdmin(Admin admin) {
-        String encodedPassword = bCryptPasswordEncoder.encode(admin.getPassword());
+        String encodedPassword = passwordEncoder.encode(admin.getPassword());
         Account account = new Account();
         account.setEmail(admin.getEmail());
         account.setPassword(encodedPassword);
@@ -49,7 +47,7 @@ public class SignUpLogInModuleServices{
     public ResponseEntity<LogInDTO> signInChecker(String email, String password) {
 
         Account account = this.accountServices.checkEmailExistence(email);
-        if (Objects.equals(account, null) || !bCryptPasswordEncoder.matches(password, account.getPassword())) {
+        if (Objects.equals(account, null) || !passwordEncoder.matches(password, account.getPassword())) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         LogInDTO id_role = new LogInDTO(account.getAccountId(), account.getRole());
