@@ -2,18 +2,17 @@ package com.example.backend.Entities;
 
 import com.example.backend.Entities.CompositeKeys.FlightLegPK;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import com.example.backend.Enums.Gender;
+import com.example.backend.Enums.MealSpecification;
+import com.example.backend.Enums.SpecialNeeds;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -21,14 +20,11 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(FlightLegPK.class)
 @Entity
 public class FlightLeg {
-    @Id
-    private Integer flightLegId;
 
-    @Id
-    private Integer flightId;
+    @EmbeddedId
+    private FlightLegPK flightLegId;
 
     @ManyToOne
     @MapsId("flightId")

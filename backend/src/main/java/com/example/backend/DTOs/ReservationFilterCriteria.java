@@ -5,8 +5,7 @@ import java.time.LocalDate;
 import jakarta.validation.constraints.NotNull;
 
 public record ReservationFilterCriteria(
-        @NotNull(message= "User id cannot be null.")
-        Integer userId,
+        @NotNull(message= "User id cannot be null.") Integer userId,
         String source,
         String destination,
         LocalDate departureDate,
@@ -15,6 +14,5 @@ public record ReservationFilterCriteria(
         String sortBy,
         String direction,
         Boolean pastFlights,
-        Boolean recentFlights) {
-
-}
+        Boolean recentFlights
+) {}

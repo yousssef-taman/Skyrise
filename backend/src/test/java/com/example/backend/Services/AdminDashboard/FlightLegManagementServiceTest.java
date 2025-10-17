@@ -5,13 +5,14 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.backend.DTOMappers.LogInDTOMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.backend.DTOs.AdminDashboard.FlightLegUpdateDTO;
+import com.example.backend.DTOs.FlightLegUpdateDTO;
 import com.example.backend.Entities.Airport;
 import com.example.backend.Entities.Flight;
 import com.example.backend.Entities.FlightLeg;
@@ -26,7 +27,7 @@ import jakarta.transaction.Transactional;
 public class FlightLegManagementServiceTest {
 
     @Autowired
-    private FlightLegManagementService flightLegManagementService;
+    private LogInDTOMapper.FlightLegManagementService flightLegManagementService;
 
     @Autowired
     private AirportRepository airportRepository;
@@ -142,7 +143,7 @@ public class FlightLegManagementServiceTest {
                 .businessPrice(200)
                 .availableEconomySeats(100)
                 .availableBusinessSeats(50)
-                .isCancel(isCancel)
+                .isCanceled(isCancel)
                 .build();
         flightRepository.save(flight1);
         return flight1;

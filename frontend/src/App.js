@@ -15,11 +15,7 @@ import ArchivePage from "./pages/AdminDashboard/ArchivePage";
 import UserFlights from "./pages/UserDashboard/UserFlights";
 import DisplayFlights from "./components/homepage/DisplayFlights";
 import "./App.css";
-import Popup from "./components/shared/Popup";
-import TicketReservationForm from "./components/TicketReservationForm";
-import { useState } from "react";
-import PaymentForm from "./components/PaymentForm";
-import Button from "./components/shared/Button";
+
 
 function App() {
   return (

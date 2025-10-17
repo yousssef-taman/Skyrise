@@ -13,19 +13,15 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(PaymentPK.class)
 public class Payment {
 
-    @Id
-    private Integer userId;
-
-    @Id
-    private Integer flightId;
+    @EmbeddedId
+    private PaymentPK paymentId;
 
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "userId")
-    private User user;
+    private FlightLeg.User user;
 
     @ManyToOne
     @MapsId("flightId")

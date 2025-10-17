@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.backend.Services.FeedbackDisplayService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.DTOs.FeedbackDTO;
-import com.example.backend.DTOs.PageResponse;
-import com.example.backend.DTOs.AdminDashboard.FeedbackFilterCriteria;
+import com.example.backend.DTOs.PageResponse.PageResponse;
+import com.example.backend.DTOs.Criteria.FeedbackFilterCriteria;
 import com.example.backend.Entities.*;
 import com.example.backend.Enums.Gender;
 import com.example.backend.Enums.QualityRating;
@@ -175,9 +177,9 @@ public class FeedbackDisplayServiceIntegerationTest {
         Assertions.assertEquals(1, page.totalElements());
     }
 
-    private User createUser(Account account) {
-        User user = User.builder()
-                .account(account)
+    private FlightLeg.User createUser(UserCredentials userCredentials) {
+        FlightLeg.User user = FlightLeg.User.builder()
+                .userCredentials(userCredentials)
                 .gender(Gender.FEMALE)
                 .firstName("firstName")
                 .lastName("lastName")
@@ -192,14 +194,14 @@ public class FeedbackDisplayServiceIntegerationTest {
         return user;
     }
 
-    private Account createAccount() {
-        Account account = Account.builder()
+    private UserCredentials createAccount() {
+        UserCredentials userCredentials = UserCredentials.builder()
                 .email("example@gmail.com")
                 .password("password")
                 .role(Role.USER)
                 .build();
-        accountRepository.save(account);
-        return account;
+        accountRepository.save(userCredentials);
+        return userCredentials;
     }
 
     private Flight createFlight() {
@@ -241,9 +243,9 @@ public class FeedbackDisplayServiceIntegerationTest {
         return flightLeg;
     }
 
-    private Feedback createFeedback(User user, Flight flight, short stars, QualityRating service,
-            QualityRating cleanliness, QualityRating comfort, QualityRating punctuality,
-            QualityRating foodAndBeverage) {
+    private Feedback createFeedback(FlightLeg.User user, Flight flight, short stars, QualityRating service,
+                                    QualityRating cleanliness, QualityRating comfort, QualityRating punctuality,
+                                    QualityRating foodAndBeverage) {
         Feedback feedback = Feedback.builder()
                 .user(user)
                 .flight(flight)
@@ -260,7 +262,7 @@ public class FeedbackDisplayServiceIntegerationTest {
     }
 
     private void generateData() {
-        User user = createUser(createAccount());
+        FlightLeg.User user = createUser(createAccount());
 
         Airport[] airports = new Airport[2];
         for (int i = 0; i < 2; i++)

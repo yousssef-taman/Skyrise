@@ -3,16 +3,13 @@ package com.example.backend.Repositories;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.backend.Entities.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import com.example.backend.Entities.Account;
-import com.example.backend.Entities.Feedback;
-import com.example.backend.Entities.Flight;
-import com.example.backend.Entities.User;
 import com.example.backend.Enums.Gender;
 import com.example.backend.Enums.QualityRating;
 import com.example.backend.Enums.Role;
@@ -53,7 +50,7 @@ public class FeedbackRepositoryTest {
         // given
         short[] stars = { 2, 3, 4, 5 };
         for (int i = 0; i < stars.length; i++) {
-            User user = userRepository.findAll().get(0);
+            FlightLeg.User user = userRepository.findAll().get(0);
             Flight savedFlight = flightRepository.findAll().get(i);
             addFeedback(user, savedFlight, stars[i]);
         }
@@ -80,7 +77,7 @@ public class FeedbackRepositoryTest {
         }
 
         for (int i = 0; i < stars.length; i++) {
-            User user = userRepository.findAll().get(0);
+            FlightLeg.User user = userRepository.findAll().get(0);
             Flight savedFlight = flightRepository.findAll().get(i);
             addFeedback(user, savedFlight, stars[i]);
         }
@@ -109,16 +106,16 @@ public class FeedbackRepositoryTest {
     }
 
     private void addOneUser() {
-        Account account = Account.builder()
+        UserCredentials userCredentials = UserCredentials.builder()
                 .accountId(1)
                 .email("example@gmail.com")
                 .password("password")
                 .role(Role.USER)
                 .build();
 
-        User user = User.builder()
+        FlightLeg.User user = FlightLeg.User.builder()
                 .userId(1)
-                .account(account)
+                .userCredentials(userCredentials)
                 .gender(Gender.FEMALE)
                 .firstName("firstName")
                 .lastName("lastName")
@@ -132,7 +129,7 @@ public class FeedbackRepositoryTest {
         userRepository.save(user);
     }
 
-    private void addFeedback(User user, Flight flight, short stars) {
+    private void addFeedback(FlightLeg.User user, Flight flight, short stars) {
         Feedback feedback = Feedback.builder()
                 .user(user)
                 .flight(flight)

@@ -1,9 +1,6 @@
 package com.example.backend.Services;
 
-import com.example.backend.Entities.Account;
-import com.example.backend.Entities.Flight;
-import com.example.backend.Entities.Payment;
-import com.example.backend.Entities.User;
+import com.example.backend.Entities.*;
 import com.example.backend.Enums.Gender;
 import com.example.backend.Enums.Role;
 import com.example.backend.Repositories.PaymentRepository;
@@ -16,12 +13,11 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class PaymentServiceTest {
 
-    private User user;
+    private FlightLeg.User user;
     private Flight flight;
 
     @BeforeEach
@@ -30,9 +26,9 @@ public class PaymentServiceTest {
         flight = createFlight();
     }
 
-    private User createUser(Account account) {
-        User user = User.builder()
-                .account(account)
+    private FlightLeg.User createUser(UserCredentials userCredentials) {
+        FlightLeg.User user = FlightLeg.User.builder()
+                .userCredentials(userCredentials)
                 .gender(Gender.FEMALE)
                 .firstName("firstName")
                 .lastName("lastName")
@@ -46,13 +42,13 @@ public class PaymentServiceTest {
         return user;
     }
 
-    private Account createAccount() {
-        Account account = Account.builder()
+    private UserCredentials createAccount() {
+        UserCredentials userCredentials = UserCredentials.builder()
                 .email("example@gmail.com")
                 .password("password")
                 .role(Role.USER)
                 .build();
-        return account;
+        return userCredentials;
     }
 
 
@@ -60,7 +56,7 @@ public class PaymentServiceTest {
         LocalDate date = LocalDate.of(2024, 10, 8);
 
         Flight flight = Flight.builder()
-                .isCancel(false)
+                .isCanceled(false)
                 .departureDate(date)
                 .arrivalDate(date)
                 .economyPrice(1000)
@@ -75,7 +71,7 @@ public class PaymentServiceTest {
     public void testPay() {
         PaymentRepository mockRepository = Mockito.mock(PaymentRepository.class);
 
-        PaymentServices paymentServices = new PaymentServices(mockRepository);
+        PaymentService paymentServices = new PaymentService(mockRepository);
 
         Payment payment = new Payment();
         payment.setFlightId(1);

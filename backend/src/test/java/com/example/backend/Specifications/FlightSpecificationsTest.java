@@ -256,7 +256,7 @@ public class FlightSpecificationsTest {
     private Flight createFlights(LocalDate date, LocalDate arrivalDate, float economyPrice, float businessPrice,
             int availableEconomySeats, int availableBusinessSeats, boolean isCancel) {
         Flight flight = Flight.builder()
-                .isCancel(isCancel)
+                .isCanceled(isCancel)
                 .departureDate(date)
                 .arrivalDate(arrivalDate)
                 .economyPrice(economyPrice)

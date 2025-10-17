@@ -3,16 +3,7 @@ package com.example.backend.Entities;
 import com.example.backend.Entities.CompositeKeys.NotificationPK;
 import com.example.backend.Enums.MessageTitle;
 import com.example.backend.Enums.Status;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,15 +16,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@IdClass(NotificationPK.class)
 public class Notification {
-    @Id
-    private Integer userId;
 
-    @Id 
-    @GeneratedValue(generator = "increment")
-    private Integer notificationId;
-
+    @EmbeddedId
+    private NotificationPK notificationId ;
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")

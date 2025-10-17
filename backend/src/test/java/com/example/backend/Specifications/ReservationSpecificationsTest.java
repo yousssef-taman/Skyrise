@@ -5,7 +5,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.example.backend.Entities.*;
-import com.example.backend.Enums.FlightType;
 import com.example.backend.Enums.Gender;
 import com.example.backend.Enums.Role;
 import com.example.backend.Enums.SeatClass;
@@ -13,7 +12,6 @@ import com.example.backend.Repositories.FlightLegRepository;
 import com.example.backend.Repositories.FlightRepository;
 import com.example.backend.Repositories.ReservationRepository;
 import com.example.backend.Repositories.UserRepository;
-import com.example.backend.Repositories.AccountRepository;
 import com.example.backend.Repositories.AirportRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -39,7 +37,7 @@ public class ReservationSpecificationsTest {
 
     private Airport[] airports;
     private Flight[] flights;
-    private User user;
+    private FlightLeg.User user;
 
     @BeforeEach
     void setup() {
@@ -166,7 +164,7 @@ public class ReservationSpecificationsTest {
     private Flight createFlights(LocalDate date, LocalDate arrivalDate, float economyPrice, float businessPrice,
             int availableEconomySeats, int availableBusinessSeats, boolean isCancel) {
         Flight flight = Flight.builder()
-                .isCancel(isCancel)
+                .isCanceled(isCancel)
                 .departureDate(date)
                 .arrivalDate(arrivalDate)
                 .economyPrice(economyPrice)
@@ -209,9 +207,9 @@ public class ReservationSpecificationsTest {
         airportRepository.deleteAll();
     }
 
-    private User createUser(Account account) {
-        User user = User.builder()
-                .account(account)
+    private FlightLeg.User createUser(UserCredentials userCredentials) {
+        FlightLeg.User user = FlightLeg.User.builder()
+                .userCredentials(userCredentials)
                 .gender(Gender.FEMALE)
                 .firstName("firstName")
                 .lastName("lastName")
@@ -226,17 +224,17 @@ public class ReservationSpecificationsTest {
         return user;
     }
 
-    private Account createAccount() {
-        Account account = Account.builder()
+    private UserCredentials createAccount() {
+        UserCredentials userCredentials = UserCredentials.builder()
                 .email("example@gmail.com")
                 .password("password")
                 .role(Role.USER)
                 .build();
-        accountRepository.save(account);
-        return account;
+        accountRepository.save(userCredentials);
+        return userCredentials;
     }
 
-    private Reservation createReservation(User user, Flight flight) {
+    private Reservation createReservation(FlightLeg.User user, Flight flight) {
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .flight(flight)

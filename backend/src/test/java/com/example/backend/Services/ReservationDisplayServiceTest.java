@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.backend.Entities.*;
+import com.example.backend.Services.Reservation.ReservationDisplayService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,19 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.backend.DTOs.PageResponse;
+import com.example.backend.DTOs.PageResponse.PageResponse;
 import com.example.backend.DTOs.ReservationDTO;
 import com.example.backend.DTOs.ReservationFilterCriteria;
-import com.example.backend.Entities.Account;
-import com.example.backend.Entities.Airport;
-import com.example.backend.Entities.Flight;
-import com.example.backend.Entities.FlightLeg;
-import com.example.backend.Entities.Reservation;
-import com.example.backend.Entities.User;
+import com.example.backend.Entities.UserCredentials;
 import com.example.backend.Enums.Gender;
 import com.example.backend.Enums.Role;
 import com.example.backend.Enums.SeatClass;
-import com.example.backend.Repositories.AccountRepository;
 import com.example.backend.Repositories.AirportRepository;
 import com.example.backend.Repositories.FlightLegRepository;
 import com.example.backend.Repositories.FlightRepository;
@@ -48,7 +44,7 @@ public class ReservationDisplayServiceTest {
     private UserRepository userRepository;
     @Autowired
     private AirportRepository airportRepository;
-    private User user;
+    private FlightLeg.User user;
     private Flight[] flights;
 
     @BeforeEach
@@ -92,7 +88,7 @@ public class ReservationDisplayServiceTest {
     private Flight createFlights(LocalDate date, LocalDate arrivalDate, float economyPrice, float businessPrice,
             int availableEconomySeats, int availableBusinessSeats, boolean isCancel) {
         Flight flight = Flight.builder()
-                .isCancel(isCancel)
+                .isCanceled(isCancel)
                 .departureDate(date)
                 .arrivalDate(arrivalDate)
                 .economyPrice(economyPrice)
@@ -136,9 +132,9 @@ public class ReservationDisplayServiceTest {
         airportRepository.deleteAll();
     }
 
-    private User createUser(Account account) {
-        User user = User.builder()
-                .account(account)
+    private FlightLeg.User createUser(UserCredentials userCredentials) {
+        FlightLeg.User user = FlightLeg.User.builder()
+                .userCredentials(userCredentials)
                 .gender(Gender.FEMALE)
                 .firstName("firstName")
                 .lastName("lastName")
@@ -153,17 +149,17 @@ public class ReservationDisplayServiceTest {
         return user;
     }
 
-    private Account createAccount() {
-        Account account = Account.builder()
+    private UserCredentials createAccount() {
+        UserCredentials userCredentials = UserCredentials.builder()
                 .email("example@gmail.com")
                 .password("password")
                 .role(Role.USER)
                 .build();
-        accountRepository.save(account);
-        return account;
+        accountRepository.save(userCredentials);
+        return userCredentials;
     }
 
-    private Reservation createReservation(User user, Flight flight) {
+    private Reservation createReservation(FlightLeg.User user, Flight flight) {
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .flight(flight)

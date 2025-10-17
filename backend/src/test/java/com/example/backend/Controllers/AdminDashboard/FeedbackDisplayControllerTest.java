@@ -1,5 +1,6 @@
 package com.example.backend.Controllers.AdminDashboard;
 
+import com.example.backend.Controllers.FeedbackDisplayController;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.example.backend.DTOs.FeedbackDTO;
-import com.example.backend.DTOs.AdminDashboard.FeedbackFilterCriteria;
-import com.example.backend.DTOs.PageResponse;
+import com.example.backend.DTOs.Criteria.FeedbackFilterCriteria;
+import com.example.backend.DTOs.PageResponse.PageResponse;
 import com.example.backend.Enums.QualityRating;
-import com.example.backend.Services.AdminDashboard.FeedbackDisplayService;
+import com.example.backend.Services.FeedbackDisplayService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

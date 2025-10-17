@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.backend.Entities.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,14 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.example.backend.Entities.Account;
-import com.example.backend.Entities.Feedback;
-import com.example.backend.Entities.Flight;
-import com.example.backend.Entities.User;
 import com.example.backend.Enums.Gender;
 import com.example.backend.Enums.QualityRating;
 import com.example.backend.Enums.Role;
-import com.example.backend.Repositories.AccountRepository;
 import com.example.backend.Repositories.FeedbackRepository;
 import com.example.backend.Repositories.FlightRepository;
 import com.example.backend.Repositories.UserRepository;
@@ -129,9 +125,9 @@ public class FeedbackSpecificationsTest {
         Assertions.assertEquals(expected_number_of_feedback_5, list_poor.size());
     }
 
-    private User createUser(Account account) {
-        User user = User.builder()
-                .account(account)
+    private FlightLeg.User createUser(UserCredentials userCredentials) {
+        FlightLeg.User user = FlightLeg.User.builder()
+                .userCredentials(userCredentials)
                 .gender(Gender.FEMALE)
                 .firstName("firstName")
                 .lastName("lastName")
@@ -146,14 +142,14 @@ public class FeedbackSpecificationsTest {
         return user;
     }
 
-    private Account createAccount() {
-        Account account = Account.builder()
+    private UserCredentials createAccount() {
+        UserCredentials userCredentials = UserCredentials.builder()
                 .email("example@gmail.com")
                 .password("password")
                 .role(Role.USER)
                 .build();
-        accountRepository.save(account);
-        return account;
+        accountRepository.save(userCredentials);
+        return userCredentials;
     }
 
     private Flight createFlight() {
@@ -169,9 +165,9 @@ public class FeedbackSpecificationsTest {
         return flight;
     }
 
-    private Feedback createFeedback(User user, Flight flight, short stars, QualityRating service,
-            QualityRating cleanliness, QualityRating comfort, QualityRating punctuality,
-            QualityRating foodAndBeverage) {
+    private Feedback createFeedback(FlightLeg.User user, Flight flight, short stars, QualityRating service,
+                                    QualityRating cleanliness, QualityRating comfort, QualityRating punctuality,
+                                    QualityRating foodAndBeverage) {
         Feedback feedback = Feedback.builder()
                 .user(user)
                 .flight(flight)
@@ -188,7 +184,7 @@ public class FeedbackSpecificationsTest {
     }
 
     private void generateData() {
-        User user = createUser(createAccount());
+        FlightLeg.User user = createUser(createAccount());
 
         Flight[] flights = new Flight[6];
         for (int i = 0; i < 6; i++)

@@ -19,5 +19,5 @@ public record FeedbackDTO(
         QualityRating punctuality,
         QualityRating foodAndBeverage,
         QualityRating cleanliness,
-        LocalDateTime dateOfCreation) {
-}
+        LocalDateTime dateOfCreation
+) {}

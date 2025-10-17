@@ -45,7 +45,7 @@ public class Flight {
     @Column(nullable = false)
     private int availableBusinessSeats;
     
-    private boolean isCancel;
+    private boolean isCanceled;
 
     @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<FlightLeg> flightLegs ;
@@ -58,4 +58,9 @@ public class Flight {
 
     @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedback;
+
+
+    public void removeReservation(Reservation reservation) {
+        this.reservations.remove(reservation);
+    }
 }

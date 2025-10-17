@@ -3,14 +3,15 @@ package com.example.backend.Services.AdminDashboard;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.example.backend.Services.FlightDisplayService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.example.backend.DTOs.PageResponse;
-import com.example.backend.DTOs.AdminDashboard.AdminFlightDTO;
-import com.example.backend.DTOs.AdminDashboard.FlightFilterCriteria;
+import com.example.backend.DTOs.PageResponse.PageResponse;
+import com.example.backend.DTOs.AdminFlightDTO;
+import com.example.backend.DTOs.FlightFilterCriteria;
 import com.example.backend.Entities.Airport;
 import com.example.backend.Entities.Flight;
 import com.example.backend.Entities.FlightLeg;
@@ -122,7 +123,7 @@ public class FlightDisplayServiceIntegerationTest {
     private Flight createFlights(LocalDate date, LocalDate arrivalDate, float economyPrice, float businessPrice,
             int availableEconomySeats, int availableBusinessSeats, boolean isCancel) {
         Flight flight = Flight.builder()
-                .isCancel(isCancel)
+                .isCanceled(isCancel)
                 .departureDate(date)
                 .arrivalDate(arrivalDate)
                 .economyPrice(economyPrice)

@@ -55,6 +55,9 @@ public class User {
     @Column(nullable = false)
     private String passportIssuingCountry;
 
+    @OneToOne(mappedBy = "user")
+    private UserCredentials userCredentials;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
 
@@ -64,8 +67,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "account_id")
-    private Account account;
+
+    public void addNotification(Notification notification) {
+        this.notifications.add(notification);
+    }
+
 
 }

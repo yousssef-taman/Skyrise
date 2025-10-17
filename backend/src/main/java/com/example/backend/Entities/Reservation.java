@@ -3,16 +3,7 @@ package com.example.backend.Entities;
 import java.util.List;
 import com.example.backend.Entities.CompositeKeys.ReservationPK;
 import com.example.backend.Enums.SeatClass;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,14 +15,10 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(ReservationPK.class)
 @Entity
 public class Reservation {
-    @Id
-    private Integer userId;
-
-    @Id
-    private Integer flightId;
+    @EmbeddedId
+    private ReservationPK reservationId;
 
     @ManyToOne
     @MapsId("userId")
@@ -51,5 +38,5 @@ public class Reservation {
     private int reservedSeats;
 
     @OneToMany(mappedBy = "reservation")
-    private List<Passenger> passengers;
+    private List<User> passengers;
 }

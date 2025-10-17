@@ -5,11 +5,9 @@ import com.example.backend.Enums.Status;
 
 public record NotificationDTO(
     Integer notificationId,
-    Integer userId, 
+    Integer userId,
     Integer flightId,
-    MessageTitle title, 
-    String message, 
+    MessageTitle title,
+    String message,
     Status status
-) {
-
-}
+) {}

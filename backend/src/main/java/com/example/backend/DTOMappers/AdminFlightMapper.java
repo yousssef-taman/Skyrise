@@ -1,43 +1,20 @@
 package com.example.backend.DTOMappers;
 
-import com.example.backend.DTOs.AdminDashboard.AdminFlightDTO;
+import com.example.backend.DTOs.AdminFlightDTO;
 import com.example.backend.Entities.Flight;
-import com.example.backend.Entities.FlightLeg;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-public class AdminFlightMapper {
+@Mapper(componentModel = "spring")
+public interface AdminFlightMapper {
+    AdminFlightMapper INSTANCE = Mappers.getMapper(AdminFlightMapper.class);
 
-    public static AdminFlightDTO toDTO(Flight entity) {
+    @Mapping(target = "source", expression = "java(entity.getFlightLegs().get(0).getDepartureAirport().getAirportCity())")
+    @Mapping(target = "destination", expression = "java(entity.getFlightLegs().get(entity.getFlightLegs().size()-1).getArrivalAirport().getAirportCity())")
+    @Mapping(target = "departureTime", expression = "java(entity.getFlightLegs().get(0).getDepartureTime())")
+    @Mapping(target = "arrivalTime", expression = "java(entity.getFlightLegs().get(entity.getFlightLegs().size()-1).getArrivalTime())")
+    AdminFlightDTO toDTO(Flight entity);
 
-        int numberOfLegs = entity.getFlightLegs().size();
-        FlightLeg first = entity.getFlightLegs().get(0); 
-        FlightLeg last = entity.getFlightLegs().get(numberOfLegs-1); 
-
-        return new AdminFlightDTO(
-                entity.getId(),
-                first.getDepartureAirport().getAirportCity(),
-                last.getArrivalAirport().getAirportCity(),
-                entity.getArrivalDate(),
-                entity.getDepartureDate(),
-                last.getArrivalTime(),
-                first.getDepartureTime(),
-                entity.getEconomyPrice(),
-                entity.getBusinessPrice(),
-                entity.getAvailableEconomySeats(),
-                entity.getAvailableBusinessSeats(),
-                entity.isCancel());
-    }
-
-    public static Flight toEntity(AdminFlightDTO dto) {
-        Flight entity = Flight.builder()
-                .id(dto.id())
-                .departureDate(dto.departureDate())
-                .arrivalDate(dto.arrivalDate())
-                .economyPrice(dto.economyPrice())
-                .businessPrice(dto.businessPrice())
-                .availableBusinessSeats(dto.availableBusinessSeats())
-                .availableEconomySeats(dto.availableEconomySeats())
-                .isCancel(dto.isCancel())
-                .build();
-        return entity;
-    }
+    Flight toEntity(AdminFlightDTO dto);
 }

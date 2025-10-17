@@ -15,12 +15,11 @@ import com.example.backend.Entities.Airport;
 import com.example.backend.Entities.Feedback;
 import com.example.backend.Entities.Flight;
 import com.example.backend.Entities.FlightLeg;
-import com.example.backend.Entities.User;
 import com.example.backend.Enums.QualityRating;
 
 public class FeedbackMapperTest {
 
-        private User user;
+        private FlightLeg.User user;
         private Flight flight;
         private QualityRating cleanliness = QualityRating.EXCELLENT;
         private QualityRating comfort = QualityRating.POOR;
@@ -124,7 +123,7 @@ public class FeedbackMapperTest {
         void setupEntities() {
                 String lastName = "Osama";
                 String firstName = "Ahmed";
-                user = User.builder()
+                user = FlightLeg.User.builder()
                                 .firstName(firstName)
                                 .lastName(lastName)
                                 .build();

@@ -36,7 +36,7 @@ public class Feedback {
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
-    private User user;
+    private FlightLeg.User user;
 
     @ManyToOne
     @MapsId("flightId")
