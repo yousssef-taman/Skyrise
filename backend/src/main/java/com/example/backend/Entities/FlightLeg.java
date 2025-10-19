@@ -1,10 +1,7 @@
 package com.example.backend.Entities;
 
-import com.example.backend.Entities.CompositeKeys.FlightLegPK;
 
-import com.example.backend.Enums.Gender;
-import com.example.backend.Enums.MealSpecification;
-import com.example.backend.Enums.SpecialNeeds;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -23,8 +19,9 @@ import java.time.LocalTime;
 @Entity
 public class FlightLeg {
 
-    @EmbeddedId
-    private FlightLegPK flightLegId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @ManyToOne
     @MapsId("flightId")

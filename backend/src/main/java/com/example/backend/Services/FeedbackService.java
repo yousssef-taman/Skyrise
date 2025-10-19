@@ -24,7 +24,7 @@ public class FeedbackService {
         Flight flight = this.flightRepository.findFlightByFlightId(feedbackDTO.flightId()).
                                 orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.FLIGHT_NOT_FOUND));
 
-        FlightLeg.User user = this.userRepository.findUserByUserId(feedbackDTO.userId())
+        User user = this.userRepository.findUserByUserId(feedbackDTO.userId())
                 .orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.USER_NOT_FOUND));
 
         Feedback feedback = feedbackMapper.toEntity(feedbackDTO);

@@ -1,18 +1,16 @@
 package com.example.backend.Controllers;
 
+import com.example.backend.DTOs.PassengerDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.backend.DTOs.TicketDTO;
 import com.example.backend.Services.Reservation.ReservationService;
 
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -25,16 +23,26 @@ public class TicketReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<String> addReservation(@Valid @RequestBody TicketDTO ticketDTO) {
+    public ResponseEntity<Void> addReservation(@Valid @RequestBody TicketDTO ticketDTO) {
         reservationService.createReservation(ticketDTO);
 
-        return ResponseEntity.ok("Booking tickets is done successfully.");
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/reservations/{flightId}/{userId}")
-    public ResponseEntity<String> deleteReservation(@PathVariable Integer flightId, @PathVariable Integer userId) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Integer flightId, @PathVariable Integer userId) {
         reservationService.cancelReservation(flightId, userId);
-        return ResponseEntity.ok("Deleting tickets is done successfully.");
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/passengers")
+    public ResponseEntity<Void> addPassengers(@RequestBody List<@Valid PassengerDTO> passengers,
+                                                @RequestParam Integer userId,
+                                                @RequestParam Integer flightId) {
+
+        reservationService.addPassengersToReservation(passengers, userId, flightId);
+
+        return ResponseEntity.ok().build();
     }
 
 }

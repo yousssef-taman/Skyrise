@@ -1,6 +1,5 @@
 package com.example.backend.Entities;
 
-import com.example.backend.Entities.CompositeKeys.NotificationPK;
 import com.example.backend.Enums.MessageTitle;
 import com.example.backend.Enums.Status;
 import jakarta.persistence.*;
@@ -18,8 +17,10 @@ import lombok.Setter;
 @Entity
 public class Notification {
 
-    @EmbeddedId
-    private NotificationPK notificationId ;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Integer id;
+
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")

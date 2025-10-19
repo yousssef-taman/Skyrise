@@ -16,6 +16,8 @@ public final class ExceptionMessages {
     public static final String USER_ALREADY_RESERVED_A_SEAT_ON_THIS_FLIGHT = "User already reserved a seat on this flight";
     public static final String AVAILABLE_SEATS_STRATEGY_NOT_FOUND = "Available seats strategy not found";
     public static final String NO_AVAILABLE_SEATS_IN_FLIGHT = "No available seats in the flight";
+    public static final String SEATS_HAVE_BEEN_RESERVED_BEFORE = "Seats have been reserved before";
+    public static final String PASSENGER_COUNT_MISMATCH = "Number of passengers doesn't match the reserved seats.";
     private ExceptionMessages() {
     }
 }

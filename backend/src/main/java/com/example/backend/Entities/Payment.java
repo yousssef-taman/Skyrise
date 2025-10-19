@@ -1,7 +1,6 @@
 package com.example.backend.Entities;
 
 
-import com.example.backend.Entities.CompositeKeys.PaymentPK;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,13 +14,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Payment {
 
-    @EmbeddedId
-    private PaymentPK paymentId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "userId")
-    private FlightLeg.User user;
+    private User user;
 
     @ManyToOne
     @MapsId("flightId")

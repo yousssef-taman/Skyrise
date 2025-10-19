@@ -2,6 +2,8 @@ package com.example.backend.Services.Reservation;
 
 import com.example.backend.Constants.ExceptionMessages;
 import com.example.backend.Constants.LogMessages;
+import com.example.backend.DTOMappers.PassengerMapper;
+import com.example.backend.DTOs.PassengerDTO;
 import com.example.backend.DTOs.TicketDTO;
 import com.example.backend.Entities.Flight;
 import com.example.backend.Entities.Reservation;
@@ -20,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @Transactional
@@ -31,6 +35,7 @@ public class ReservationService {
     private final FlightRepository flightRepository;
     private final SeatAdjustmentFactory seatAdjustmentFactory;
     private final AvailableSeatsFactory availableSeatsFactory;
+    private final PassengerMapper passengerMapper;
 
     public void createReservation(TicketDTO ticketDTO) {
 
@@ -78,5 +83,29 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.USER_NOT_FOUND));
         Reservation reservation = Reservation.builder().user(passenger).flight(flight).seatClass(ticket.seatClass()).reservedSeats(ticket.reservedSeats()).build();
         reservationRepository.save(reservation);
+    }
+
+    public void addPassengersToReservation(List<PassengerDTO> passengerDTOs, Integer userId, Integer flightId) {
+        Reservation reservation = reservationRepository.findByFlightIdAndUserId(flightId, userId)
+                .orElseThrow(() -> new IllegalArgumentException(ExceptionMessages.RESERVATION_NOT_FOUND));
+
+        validatePassengerCountMatchesReservedSeats(reservation, passengerDTOs.size());
+
+        List<User> passengers = passengerDTOs.stream()
+                .map(passengerMapper::toEntity).toList();
+        userRepository.saveAll(passengers);
+    }
+
+    private void validatePassengerCountMatchesReservedSeats(Reservation reservation, int numberOfPassengers) {
+        List<User> reservedPassengers = userRepository.findByReservation(reservation);
+        int reservedSeats = reservation.getReservedSeats();
+        boolean haveSeatsBeenReservedBefore = !reservedPassengers.isEmpty();
+        if (haveSeatsBeenReservedBefore) {
+            throw new IllegalArgumentException(ExceptionMessages.SEATS_HAVE_BEEN_RESERVED_BEFORE);
+        }
+        boolean isNumberOfPassengersMatchesTheReservedSeats = numberOfPassengers == reservedSeats;
+        if (!isNumberOfPassengersMatchesTheReservedSeats) {
+            throw new IllegalArgumentException(ExceptionMessages.PASSENGER_COUNT_MISMATCH);
+        }
     }
 }
