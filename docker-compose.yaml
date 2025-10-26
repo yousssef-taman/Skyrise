@@ -9,8 +9,6 @@ services:
       MYSQL_USER: skyrise_admin
       MYSQL_PASSWORD: skyrise_app_swe26
       MYSQL_ROOT_PASSWORD: rootpassword123
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
