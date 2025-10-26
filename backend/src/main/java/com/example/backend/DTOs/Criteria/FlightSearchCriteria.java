@@ -27,6 +27,7 @@ public record FlightSearchCriteria(
         
         FlightType flightType,
         String sortby,
+
         String direction) {
 
 }

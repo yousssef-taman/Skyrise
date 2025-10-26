@@ -3,7 +3,7 @@ package com.example.backend.Services.Reservation.Strategy.SeatAdjustmentStrategy
 import com.example.backend.Entities.Flight;
 import org.springframework.stereotype.Component;
 
-@Component("ECONOMY")
+@Component("EconomySeatAdjustment")
 public class EconomySeatAdjustment implements SeatAdjustmentStrategy{
     @Override
     public void addSeats(Flight flight, int reservedSeats) {

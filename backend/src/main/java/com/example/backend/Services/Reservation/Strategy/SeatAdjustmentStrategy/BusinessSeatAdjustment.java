@@ -4,7 +4,7 @@ import com.example.backend.Entities.Flight;
 import org.springframework.stereotype.Component;
 
 
-@Component("BUSINESS")
+@Component("BusinessSeatAdjustment")
 public class BusinessSeatAdjustment implements SeatAdjustmentStrategy {
 
 

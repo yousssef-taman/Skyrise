@@ -5,10 +5,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.example.backend.Entities.Feedback;
-import com.example.backend.Entities.CompositeKeys.ReservationPK;
 
 @Repository
-public interface FeedbackRepository extends JpaRepository<Feedback, ReservationPK>, JpaSpecificationExecutor<Feedback> {
+public interface FeedbackRepository extends JpaRepository<Feedback, Integer>, JpaSpecificationExecutor<Feedback> {
     @Query("SELECT COALESCE(AVG(stars), 0) FROM Feedback")
     Double getAvgRating();
 }

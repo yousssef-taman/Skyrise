@@ -1,5 +1,6 @@
 package com.example.backend.Services;
 
+import com.example.backend.Utilites.PageFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import com.example.backend.Repositories.FeedbackRepository;
@@ -42,10 +43,19 @@ public class FeedbackDisplayService {
 
         Specification<Feedback> spec = Specification.where(null);
 
-        // add specifications based on filter criteria (only if they are not null)
-        if (feedbackFilterDTO.stars() != null) 
+        spec = buildFilterSpecifications(spec, feedbackFilterDTO);
+
+        Pageable pageable = createPageableFromFilter(feedbackFilterDTO, pageNumber);
+
+        Page<Feedback> page = feedbackRepository.findAll(spec, pageable);
+        Page<FeedbackDTO> pageDTO = page.map(feedBackMapper::toDTO);
+        return PageResponseMapper.toPageResponse(pageDTO);
+    }
+
+    private Specification<Feedback> buildFilterSpecifications(Specification<Feedback> spec, FeedbackFilterCriteria feedbackFilterDTO) {
+        if (feedbackFilterDTO.stars() != null)
             spec = spec.and(FeedbackSpecifications.containsStars(feedbackFilterDTO.stars()));
-        
+
         if (feedbackFilterDTO.service() != null)
             spec = spec.and(FeedbackSpecifications.containsService(feedbackFilterDTO.service()));
 
@@ -61,14 +71,13 @@ public class FeedbackDisplayService {
         if (feedbackFilterDTO.foodAndBeverage() != null)
             spec = spec.and(FeedbackSpecifications.containsFoodAndBeverage(feedbackFilterDTO.foodAndBeverage()));
 
-        String sortDirection = feedbackFilterDTO.direction();
-        Sort sort = Utilities.sort(sortDirection, "dateOfCreation");
-
-        Pageable pageable = Utilities.CreatePage(pageNumber, 10, sort);
-
-        Page<Feedback> page = feedbackRepository.findAll(spec, pageable);
-        Page<FeedbackDTO> pageDTO = page.map(feedBackMapper::toDTO);
-        return PageResponseMapper.toPageResponse(pageDTO);
+        return spec;
     }
 
+    private Pageable createPageableFromFilter(FeedbackFilterCriteria feedbackFilterDTO, int pageNumber) {
+        String sortDirection = feedbackFilterDTO.direction();
+        Sort sort = Utilities.sort(sortDirection, "dateOfCreation");
+        return PageFactory.create(pageNumber, null, sort);
+    }
 }
+

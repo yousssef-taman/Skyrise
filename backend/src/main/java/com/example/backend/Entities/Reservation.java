@@ -1,7 +1,6 @@
 package com.example.backend.Entities;
 
 import java.util.List;
-import com.example.backend.Entities.CompositeKeys.ReservationPK;
 import com.example.backend.Enums.SeatClass;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,8 +16,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 public class Reservation {
-    @EmbeddedId
-    private ReservationPK reservationId;
+    @Id
+    private Integer id;
 
     @ManyToOne
     @MapsId("userId")

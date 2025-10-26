@@ -1,5 +1,6 @@
 package com.example.backend.Services;
 
+import com.example.backend.Utilites.PageFactory;
 import com.example.backend.Utilites.ValidateInput;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +46,7 @@ public class FlightDisplayService {
         }
 
         Sort sort = Utilities.sort(flightFilterDTO.direction(), flightFilterDTO.sortby());
-        Pageable pageable = Utilities.CreatePage(pageNumber, 10, sort);
+        Pageable pageable = PageFactory.create(pageNumber, null, sort);
 
         Page<Flight> page = flightRepository.findAll(spec, pageable);
         Page<AdminFlightDTO> pageDTO = page.map(adminFlightMapper::toDTO);
